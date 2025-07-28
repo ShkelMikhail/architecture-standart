@@ -1,0 +1,33 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(user, "Клиент", "Пользователь банка")
+
+System_Boundary(ibank_boundary, "Интернет-банк") {
+    Container(webapp, "Web-клиент", "ASP.NET MVC 4.5", "Интерфейс для подачи и просмотра депозитов")
+    Container(api, "Backend", ".NET Framework 4.5", "Бизнес-логика заявок на депозиты и интеграций")
+    ContainerDb(ibank_db, "БД интернет-банка", "MS SQL", "Хранение заявок и данных клиентов")
+}
+
+System_Boundary(abs_boundary, "АБС") {
+    Container(abs_app, "Ядро АБС", "Delphi/PLSQL", "Ведение счетов, открытие депозитов")
+    ContainerDb(abs_db, "БД АБС", "Oracle", "Данные по продуктам и счетам")
+}
+
+System_Ext(web, "Сайт", "Подача заявок новых клиентов")
+System_Ext(ccenter, "Колл-центр/CRM", "Java Spring Boot, React, PostgreSQL")
+System_Ext(backend, "Бэк-офис", "Обработка заявок, работа со ставками")
+System_Ext(sms, "Система СМС", "Отправка уведомлений клиентам")
+System_Ext(stavki, "Модуль ставок (XLS/АБС)", "Хранение ставок")
+
+Rel(user, webapp, "Взаимодействует через UI")
+Rel(webapp, api, "HTTP")
+Rel(api, ibank_db, "ADO.NET")
+Rel(api, sms, "HTTP (шифрование)")
+Rel(api, backend, "Передача заявок для ручной обработки")
+Rel(backend, abs_app, "Интеграция для открытия депозита")
+Rel(abs_app, abs_db, "PLSQL/SQL")
+Rel(backend, stavki, "Работа с файлами ставок")
+Rel(web, ccenter, "Передача заявок новых клиентов")
+Rel(ccenter, backend, "Передача заявок после звонка")
+@enduml

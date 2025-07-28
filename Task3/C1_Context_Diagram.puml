@@ -1,0 +1,24 @@
+plantuml
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(user, "Клиент", "Пользователь банка: новый или действующий")
+System(web, "Сайт", "Витрина продуктов, подача заявки на депозит")
+System(ibank, "Интернет-банк", "Подача и просмотр депозитов для существующих клиентов")
+System_Ext(abs, "АБС", "Автоматизированная банковская система (core banking)")
+System_Ext(backend, "Бэк-офис", "Обработка заявок, работа со ставками")
+System_Ext(ccenter, "Колл-центр/CRM", "Обработка заявок с сайта")
+System_Ext(sms, "Система СМС/уведомлений", "Отправка клиентских уведомлений")
+System_Ext(stavki, "Модуль ставок (XLS/АБС)", "Управление и хранение ставок по депозитам")
+
+Rel(user, web, "Просматривает продукты, подает заявку")
+Rel(user, ibank, "Подает заявку, получает СМС")
+Rel(web, ccenter, "Передает заявку")
+Rel(ibank, backend, "Передает заявку на обработку")
+Rel(backend, abs, "Открывает депозит, получает ставки")
+Rel(ccenter, backend, "Передает результат звонка/обработку")
+Rel(backend, sms, "Инициирует отправку СМС")
+Rel(ibank, sms, "Инициирует отправку СМС")
+Rel(backend, stavki, "Работает со ставками")
+Rel(backend, ibank, "Подтверждает открытие депозита (статус)")
+@enduml
