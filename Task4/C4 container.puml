@@ -1,0 +1,22 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+Person(bo_manager, "Менеджер бэк-офиса")
+System_Boundary(stavki_boundary, "Система ставок") {
+    Container(xls_module, "Модуль XLS", "MS Excel/ручная загрузка", "Редактирование и экспорт ставок")
+    Container(abs_module, "Модуль АБС", "Delphi/PLSQL", "Управление и хранение ставок")
+}
+
+System_Boundary(cc_boundary, "Система кол-центра") {
+    Container(cc_app, "Веб-интерфейс оператора", "React.js", "Просмотр ставок")
+    Container(cc_backend, "Бэкенд кол-центра", "Java Spring Boot", "Интеграция с модулем ставок")
+}
+
+System_Ext(partner_cc, "Партнёрский кол-центр", "Внешний сервис (файл)")
+
+Rel(bo_manager, xls_module, "Редактирует ставки")
+Rel(xls_module, abs_module, "Выгружает/импортирует ставки")
+Rel(cc_backend, abs_module, "Получает ставки через API или файл")
+Rel(cc_app, cc_backend, "Просматривает ставки")
+Rel(abs_module, partner_cc, "Экспортирует файл ставок (XLS/CSV)")
+@enduml

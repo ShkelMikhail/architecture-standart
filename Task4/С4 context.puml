@@ -1,0 +1,17 @@
+@startuml
+!includeurl https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+Person(bo_manager, "Менеджер бэк-офиса")
+System(stavki, "Система ставок (XLS/АБС)", "Хранение и экспорт ставок")
+System(cc, "Кол-центр", "Внутренний кол-центр банка")
+System_Ext(partner_cc, "Партнёрский кол-центр", "Внешняя система")
+Person(cc_agent, "Оператор кол-центра")
+Person(partner_cc_agent, "Оператор партнёрского кол-центра")
+
+Rel(bo_manager, stavki, "Обновляет/загружает ставки")
+Rel(cc_agent, cc, "Работает в интерфейсе кол-центра")
+Rel(cc, stavki, "Получает ставки для интерфейса операторов")
+Rel(stavki, partner_cc, "Выгружает файл ставок (XLS/CSV)")
+Rel(partner_cc_agent, partner_cc, "Использует ставки для консультаций")
+@enduml
+
